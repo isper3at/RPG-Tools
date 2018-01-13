@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+   <modelVersion>4.0.0</modelVersion>
+
+   <!-- ********************************************** -->
+   <!-- ****************** BASE POM ****************** -->
+   <!-- ********************************************** -->
+
+   <groupId>ind.isper.rpg</groupId>
+   <artifactId>life-character</artifactId>
+   <version>0.0.1</version>
+   
+   <name>Life Character Generator</name>
+   <description>Character Generator for characters to be used in 5th Edition Dungeons and Dragons.
+     Rules for the generation are from https://www.reddit.com/user/hornbook1776</description>
+   <url>https://github.com/isper3at/RPG-Tools</url>
+   <inceptionYear>2017</inceptionYear>
+   
+   <dependencies>
+       <dependency>
+         <groupId>com.wandrell.tabletop</groupId>
+         <artifactId>dice</artifactId>
+         <version>1.0.2</version>
+      </dependency>
+   </dependencies>
+</project>
