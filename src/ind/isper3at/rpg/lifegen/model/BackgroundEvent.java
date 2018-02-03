@@ -11,8 +11,7 @@ import ind.isper3at.rpg.lifegen.tables.GenTable;
 public class BackgroundEvent {
     private final String   description;
     private final GenTable nextTable;
-    private final int      change;
-    private final Stats    stat;
+    private final StatChange[] changes;
 
     /**
      * Creates a new {@link BackgroundEvent}
@@ -20,14 +19,34 @@ public class BackgroundEvent {
      * @param description - The description of what occurred. (not null)
      * @param nextTable - The next Table, if required, this event points to.
      *        (not null)
-     * @param stat - The {@link Stats} to change with this event. (not null)
-     * @param change - The amount to change the stat.
+     * @param changes - The {@link StatChange}s to make with this event.
      */
-    public BackgroundEvent(final String description, final GenTable nextTable, final Stats stat, final int change) {
+    public BackgroundEvent(final String description, final GenTable nextTable, final StatChange... changes) {
         this.description = requireNonNull(description);
         this.nextTable = requireNonNull(nextTable);
-        this.stat = requireNonNull(stat);
-        this.change = change;
+        this.changes = changes;
+    }
+
+    /**
+     * Creates a new {@link BackgroundEvent} that is just a table change.
+     *
+     * @param string - The description of the event. (not null)
+     * @param nextTable - The events table to change to. (not null)
+     */
+    public BackgroundEvent(final String description, final GenTable nextTable) {
+        this(description, nextTable, new StatChange[] {});
+    }
+
+    /**
+     * Creates a new {@link BackgroundEvent} that alters a single stat.
+     *
+     * @param description - The description of the event. (not null)
+     * @param nextTable - The events table to change to. (not null)
+     * @param statChange - The {@link StatChange} to make with this event. (not
+     *        null)
+     */
+    public BackgroundEvent(final String description, final GenTable nextTable, final StatChange statChange) {
+        this(description, nextTable, new StatChange[] { requireNonNull(statChange) });
     }
 
     /**
@@ -45,17 +64,15 @@ public class BackgroundEvent {
     }
 
     /**
-     * @return - The {@link Stats} to change.
+     * @return - The {@link StatChange}s to make.
      */
-    public Stats getState() {
-        return stat;
+    public StatChange[] getStatChanges() {
+        return changes;
     }
 
-    /**
-     * @return - The amount a stat changes with this even.
-     */
-    public int getChange() {
-        return change;
+    @Override
+    public String toString() {
+        return description;
     }
 
     /**
@@ -63,5 +80,38 @@ public class BackgroundEvent {
      */
     public enum Stats {
         STRENGTH, CONSTITUTION, DEXTERITY, WISDOM, INTELLIGENCE, CHARISMA, FLOATING, NONE;
+    }
+
+    /**
+     * Represents a change in a character's stat.
+     */
+    public static class StatChange {
+        private final Stats stat;
+        private final int   change;
+
+        /**
+         * Creates a new {@link StatChange}.
+         *
+         * @param stat - The {@link Stats} to change. (not null)
+         * @param change - The amount to change the {@link Stats}.
+         */
+        public StatChange(final Stats stat, final int change) {
+            this.stat = requireNonNull(stat);
+            this.change = change;
+        }
+
+        /**
+         * @return - The {@link Stats} to change.
+         */
+        public Stats getStat() {
+            return stat;
+        }
+
+        /**
+         * @return - The amount to change the {@link Stats} by.
+         */
+        public int getChange() {
+            return change;
+        }
     }
 }

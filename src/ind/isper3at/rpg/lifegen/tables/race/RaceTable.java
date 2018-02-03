@@ -1,16 +1,15 @@
 package ind.isper3at.rpg.lifegen.tables.race;
 
 import ind.isper3at.rpg.lifegen.model.Race;
-import ind.isper3at.rpg.lifegen.tables.GenTable;
 
-public class RaceTable implements GenTable<Race> {
+public class RaceTable {
     private static final String NAME = "Race";
 
     public String getName() {
         return NAME;
     }
 
-    public Race getResult(int roll) {
+    public Race getResult(final int roll) {
         if(roll < 6) {
             return Race.TIEFLING;
         } else if(roll < 11) {

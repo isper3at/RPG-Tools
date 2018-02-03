@@ -1,11 +1,17 @@
 package ind.isper3at.rpg.lifegen.model;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static java.util.Objects.requireNonNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.google.common.base.Preconditions;
+import org.apache.commons.lang3.StringUtils;
+
 import com.google.common.base.Strings;
+
+import ind.isper3at.rpg.lifegen.model.BackgroundEvent.StatChange;
 
 /**
  * Represents the core information to a Dungeons and Dragons character.
@@ -15,14 +21,14 @@ public class Character {
     private final Class  clazz;
     private final String name;
 
-    private int strength;
-    private int dexterity;
-    private int constitution;
-    private int wisdom;
-    private int intelligence;
-    private int charisma;
+    private int strength = 9;
+    private int dexterity = 9;
+    private int constitution = 9;
+    private int wisdom = 9;
+    private int intelligence = 9;
+    private int charisma = 9;
 
-    private int floating;
+    private int floating = 0;
 
     private final List<BackgroundEvent> lifeEvents;
 
@@ -34,11 +40,14 @@ public class Character {
      * @param clazz - The {@link Class} of the character. (not null)
      */
     public Character(final String name, final Race race, final Class clazz) {
-        Preconditions.checkArgument(!Strings.isNullOrEmpty(name));
+        checkArgument(!Strings.isNullOrEmpty(name));
         this.name = name;
         this.race = race;
         this.clazz = clazz;
-        lifeEvents = new ArrayList<>();
+        lifeEvents = new ArrayList<BackgroundEvent>();
+        for (final StatChange change : race.getStatChange()) {
+            applyStatChange(change);
+        }
     }
 
     /**
@@ -47,7 +56,39 @@ public class Character {
      * @param event - The Event that transpired. (not null)
      */
     public void changeEvent(final BackgroundEvent event) {
-        lifeEvents.add(Objects.requireNonNull(event));
+        lifeEvents.add(requireNonNull(event));
+        final StatChange[] changes = event.getStatChanges();
+        for (final StatChange change : changes) {
+            applyStatChange(change);
+        }
+    }
+
+    private void applyStatChange(final StatChange change) {
+        switch (change.getStat()) {
+            case CHARISMA:
+                changeCharisma(change.getChange());
+                break;
+            case CONSTITUTION:
+                changeConstitution(change.getChange());
+                break;
+            case DEXTERITY:
+                changeDexterity(change.getChange());
+                break;
+            case FLOATING:
+                changeFloating(change.getChange());
+                break;
+            case INTELLIGENCE:
+                changeIntelligence(change.getChange());
+                break;
+            case NONE:
+                break;
+            case STRENGTH:
+                changeStrength(change.getChange());
+                break;
+            case WISDOM:
+                changeWisdom(change.getChange());
+                break;
+        }
     }
 
     /**
@@ -170,5 +211,31 @@ public class Character {
                 return false;
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("|===========================================================================|\n");
+        sb.append(String.format("|%s|\n", StringUtils.center(name, 75)));
+        sb.append("|===========================================================================|\n");
+        sb.append("|\n");
+        sb.append(String.format("| Race: %s\n", race.getName()));
+        sb.append(String.format("| Class: %s\n", clazz.getName()));
+        sb.append("|\n");
+        sb.append("| Stats\n");
+        sb.append(String.format("| STR: %d\n", strength));
+        sb.append(String.format("| CON: %d\n", constitution));
+        sb.append(String.format("| DEX: %d\n", dexterity));
+        sb.append(String.format("| WIS: %d\n", wisdom));
+        sb.append(String.format("| INT: %d\n", intelligence));
+        sb.append(String.format("| CHA: %d\n", charisma));
+        sb.append("|\n");
+        sb.append("| Events\n");
+        for (final BackgroundEvent event : lifeEvents) {
+            sb.append(String.format("| %s\n", event.toString()));
+        }
+        sb.append("|===========================================================================|\n");
+        return sb.toString();
     }
 }

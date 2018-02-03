@@ -1,6 +1,10 @@
 package ind.isper3at.rpg.lifegen.model;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.Random;
+
+import com.google.common.collect.Lists;
 
 /**
  * Playable classes for characters to play as.
@@ -15,9 +19,27 @@ public class Class {
     public static final Class SORCEROR  = new Class("Sorceror");
     public static final Class WIZARD    = new Class("Wizard");
     public static final Class WARLOCK   = new Class("Warlock");
+    private static final List<Class> classes;
 
+    static {
+        classes = Lists.newArrayList(
+                BARBARIAN,
+                BARD,
+                FIGHTER,
+                MONK,
+                RANGER,
+                ROGUE,
+                SORCEROR,
+                WIZARD,
+                WARLOCK);
+    }
     private final String name;
 
+
+    public static Class roll() {
+        final Random rand = new Random();
+        return classes.get(rand.nextInt(classes.size()));
+    }
     /**
      * Creates a new Class.
      *
